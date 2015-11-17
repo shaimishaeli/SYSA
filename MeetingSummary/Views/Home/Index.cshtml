@@ -57,7 +57,7 @@
             var addedInput = '';
             if (type == "Assignments")
             {
-                addedInput = '@Html.DropDownList("users", null, new { @class = "ddlAssignments" }).ToString()';
+                addedInput = '@HttpUtility.JavaScriptStringEncode(Html.DropDownList("users", null, new { @class = "ddlAssignments" }).ToHtmlString())';
             }
             ul.append("<li><input type='textbox' class='tb" + type + "'/>" + addedInput + "</li>");
 
