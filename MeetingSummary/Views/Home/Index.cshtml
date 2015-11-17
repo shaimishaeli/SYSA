@@ -5,6 +5,7 @@
 
 <div class="jumbotron">
     <h2>@ViewBag.Title</h2>
+    <button type="button" class="btn btn-default" onclick="openNewSummaryDialog()"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>   צור סיכום חדש</button>
 </div>
 
 <div id="meetingsReport">
@@ -35,41 +36,5 @@
 @section Scripts
 {
     @Styles.Render("~/Content/DataTables/css/jquery.dataTables.min.css")
-    @Scripts.Render("~/Content/DataTables/js/jquery.dataTables.min.js")
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#tblReport').DataTable(
-            {
-                "processing": "true",
-                "stateSave": "true",
-                "language": {
-                    "url": "/Heb.json"
-                },
-                "ajax": {
-                    "url": "Home/LoadMeetingsReport",
-                    "type": "POST"
-                },
-                "columnDefs": [
-                                { "className": "centered", "targets": "_all" }
-                ],
-                "columns": [
-                            {
-                                "orderable": false,
-                                "data": null,
-                                "render": function (date, type, full, meta) {
-                                    return '<form action="/ClientTransfer/ClientTransfer" method="POST"><button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button><input type="hidden" id="id" name="id" value="' + full.Id + '"/></form>'
-                                }
-                            },
-                            { "data": "CreationDate" },
-                            { "data": "Summary" }
-                ]
-            });
-    });
-
-    function refreshClientTransferDataTable() {
-        var dataTable = $('#tblReport').DataTable();
-        dataTable.ajax.reload();
-    }
-</script>
+    @Scripts.Render("~/Content/DataTables/js/jquery.dataTables.min.js", "~/Scripts/global.js")
 }
