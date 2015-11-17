@@ -4,12 +4,24 @@
 }
 
 <div class="jumbotron">
-    <h2>@ViewBag.Title</h2>
-    <button type="button" class="btn btn-default" onclick="openNewSummaryDialog()"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span>   צור סיכום חדש</button>
+    <p>
+        <h2>@ViewBag.Title</h2>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addSummary">צור סיכום חדש</button>
+    </p>
 </div>
 
 <div id="meetingsReport">
     @Html.Partial("Meetings")
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addSummary" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            @Html.Partial("NewSummary")
+        </div>>
+    </div>
 </div>
 
 @*<div class="row">
@@ -37,4 +49,18 @@
 {
     @Styles.Render("~/Content/DataTables/css/jquery.dataTables.min.css")
     @Scripts.Render("~/Content/DataTables/js/jquery.dataTables.min.js", "~/Scripts/global.js")
+
+    <script type="text/javascript">
+        function addNewDataRow(type)
+        {
+            var ul = $("#ul" + type);
+            var addedInput = '';
+            if (type == "Assignments")
+            {
+                addedInput = '@Html.DropDownList("users", null, new { @class = "ddlAssignments" }).ToString()';
+            }
+            ul.append("<li><input type='textbox' class='tb" + type + "'/>" + addedInput + "</li>");
+
+        }
+    </script>
 }

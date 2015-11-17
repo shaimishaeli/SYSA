@@ -22,3 +22,50 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.noDisplay
+{
+	display: none;
+}
+
+.modalSpinner
+{
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	z-index: 100001;
+}
+
+.bold
+{
+    font-weight: bold;
+}
+
+.under
+{
+    text-decoration: underline;
+}
+
+.jumbotron {
+    background-color: #8ac6ff;
+    color: white;
+}
+
+li {
+    display: block;
+}
+
+li:before {
+    /*Using a Bootstrap glyphicon as the bullet point*/
+    content: "\e128";
+    font-family: 'Glyphicons Halflings';
+    margin: auto;
+}
+
+li
+{
+    padding: 0 0 4px 4px;
+}

@@ -21,5 +21,19 @@ namespace MeetingSummary.Models
 
             return meetingReportData;
         }
+
+        public IEnumerable<Users> GetUsers()
+        {
+            return _db.Users;
+        }
+
+        public void SaveSummary(string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
+        {
+            var meetingData = new MeetingData();
+            meetingData.MeetingSummary = meetingSummary;
+            meetingData.CreationDate = DateTime.Now;
+            _db.MeetingData.Add(meetingData);
+            _db.SaveChanges();
+        }
     }
 }

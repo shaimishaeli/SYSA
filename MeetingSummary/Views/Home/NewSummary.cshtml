@@ -1,0 +1,37 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">סיכום פגישה חדשה</h4>
+</div>
+<div class="modal-body" id="newSummaryModal">
+    <fieldset style="width: 100%; direction: rtl;">
+        <div>
+            <p>
+                <span class="bold under">תאריך:</span> @Html.Raw(DateTime.Now.ToShortDateString())
+            </p>
+            <p class="bold under">סיכום הפגישה</p>
+            <p>@Html.TextArea("Summary", new { cols = "50", rows = "10" })</p>
+            <p class="bold under">משימות לפגישה הבאה</p>
+            <p>
+                <div id="divTasks">
+                    <ul class="list-group-item" id="ulTasks">
+                        <li><input type="text" id="tbTask" class="tbTasks"/></li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-default" onclick="addNewDataRow('Tasks');">הוסף משימה</button>
+            </p>
+            <p class="bold under">מטלות</p>
+            <p>
+                <div id="divAssignments">
+                    <ul class="list-group-item" id="ulAssignments">
+                        <li><input type="text" id="tbAssignment" class="tbAssignments" />@Html.DropDownList("users", null, new { @class = "ddlAssignments" })</li>
+                    </ul>
+                </div>
+                <button type="button" class="btn btn-default" onclick="addNewDataRow('Assignments');">הוסף מטלה</button>
+            </p>
+        </div>
+    </fieldset>
+</div>
+<div class="modal-footer">
+    <button id="saveForm" class="btn btn-default" onclick="saveSummary();">שמור</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearModal()">בטל</button>
+</div>
