@@ -246,6 +246,8 @@
       <DependentUpon>DataModel.edmx</DependentUpon>
     </Content>
     <Content Include="Content\DataTables\images\Sorting icons.psd" />
+    <Content Include="Heb.json" />
+    <None Include="Properties\PublishProfiles\sysa.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\global.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
