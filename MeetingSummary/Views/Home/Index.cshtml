@@ -6,7 +6,7 @@
 <div class="jumbotron">
     <p>
         <h2>@ViewBag.Title</h2>
-        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addSummary">צור סיכום חדש</button>
+        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#addSummary" onclick="loadSummaryModal();">צור סיכום חדש</button>
     </p>
 </div>
 
@@ -19,7 +19,6 @@
     <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
-            @Html.Partial("NewSummary")
         </div>>
     </div>
 </div>
@@ -45,22 +44,3 @@
         <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
     </div>
 </div>*@
-@section Scripts
-{
-    @Styles.Render("~/Content/DataTables/css/jquery.dataTables.min.css")
-    @Scripts.Render("~/Content/DataTables/js/jquery.dataTables.min.js", "~/Scripts/global.js")
-
-    <script type="text/javascript">
-        function addNewDataRow(type)
-        {
-            var ul = $("#ul" + type);
-            var addedInput = '';
-            if (type == "Assignments")
-            {
-                addedInput = '@HttpUtility.JavaScriptStringEncode(Html.DropDownList("users", null, new { @class = "ddlAssignments" }).ToHtmlString())';
-            }
-            ul.append("<li><input type='textbox' class='tb" + type + "'/>" + addedInput + "</li>");
-
-        }
-    </script>
-}

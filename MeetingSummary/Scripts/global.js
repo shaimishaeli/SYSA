@@ -19,7 +19,7 @@
                         "orderable": false,
                         "data": null,
                         "render": function (date, type, full, meta) {
-                            return '<form action="/ClientTransfer/ClientTransfer" method="POST"><button type="button" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button><input type="hidden" id="id" name="id" value="' + full.Id + '"/></form>'
+                            return '<button type="button" class="btn btn-default" aria-label="Left Align" data-toggle="modal" data-target="#addSummary" onclick="loadSummaryModal(' + full.Id + ')"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>';
                         }
                     },
                     { "data": "CreationDate" },
@@ -39,10 +39,32 @@ function clearModal()
     $('#newSummaryModal').find('input, textarea').val('');
 }
 
-function saveSummary()
+function loadSummaryModal(id)
 {
+    var dataToSend = { id: id };
+
+    $.ajax({
+        type: "POST",
+        url: "/Home/LoadMeetingData",
+        data: dataToSend,
+        traditional: true,
+        dataType: "html",
+        success: function (data) {
+            debugger;
+            $('.modal-content').html(data);
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            $(".modalSpinner").hide();
+        }
+    });
+}
+
+function saveSummary(isEdit)
+{
+    var url = isEdit ? "/Home/UpdateMeeting" : "/Home/SaveNewSummary"
     var dataToSend = {
-        meetingSummary: $("#Summary").val(),
+        meetingId: $("#Id").val(),
+        meetingSummary: $("#MeetingSummary").val(),
         tasks: $(".tbTasks").map(function(){return $(this).val();}).get(),
         assignments: $(".tbAssignments").map(function () { return $(this).val(); }).get(),
         users: $(".ddlUsers").map(function () { return $(this).val(); }).get()
@@ -50,7 +72,7 @@ function saveSummary()
 
     $.ajax({
         type: "POST",
-        url: "/Home/SaveNewSummary",
+        url: url,
         data: dataToSend,
         traditional: true,
         dataType: "json",
@@ -66,4 +88,9 @@ function saveSummary()
             $(".modalSpinner").hide();
         }
     });
+}
+
+function addNewDataRow(type, htmlString) {
+    var ul = $("#ul" + type);
+    ul.append("<li><input type='textbox' class='tb" + type + "'/> &nbsp;" + htmlString + "</li>");
 }

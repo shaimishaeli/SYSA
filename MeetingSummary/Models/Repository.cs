@@ -34,6 +34,64 @@ namespace MeetingSummary.Models
             meetingData.CreationDate = DateTime.Now;
             _db.MeetingData.Add(meetingData);
             _db.SaveChanges();
+
+            UpdateData(meetingData.Id, tasks, assignments, users);
+        }
+
+        public void UpdateData(int meetingId, List<string> tasks, List<string> assignments, List<int> users)
+        {
+            if(tasks != null)
+            {
+                foreach (var task in tasks)
+                {
+                    var taskObj = new MeetingTasks();
+                    taskObj.Description = task;
+                    taskObj.MeetingId = meetingId;
+                    _db.MeetingTasks.Add(taskObj);
+                }
+            }
+
+            if (assignments != null)
+            {
+                for (int i = 0; i < assignments.Count; i++)
+                {
+                    var assignmentObj = new MeetingAssignments();
+                    assignmentObj.Description = assignments[i];
+                    assignmentObj.AssignedToUserId = users[i];
+                    assignmentObj.MeetingId = meetingId;
+                    _db.MeetingAssignments.Add(assignmentObj);
+                }
+            }
+
+            _db.SaveChanges();
+        }
+
+        public MeetingData GetMeetingById(int id)
+        {
+            return _db.MeetingData.Find(id);
+        }
+
+        public void UpdateMeetingData(int meetingId, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
+        {
+            var meetingData = GetMeetingById(meetingId);
+            meetingData.UpdateDate = DateTime.Now;
+            meetingData.MeetingSummary = meetingSummary;
+
+            var tasksList = meetingData.MeetingTasks.ToList();
+            foreach (var task in tasksList)
+            {
+                _db.MeetingTasks.Remove(task);
+            }
+
+            var assignmentsList = meetingData.MeetingAssignments.ToList();
+            foreach (var assignment in assignmentsList)
+            {
+                _db.MeetingAssignments.Remove(assignment);
+            }
+
+            _db.SaveChanges();
+
+            UpdateData(meetingId, tasks, assignments, users);
         }
     }
 }

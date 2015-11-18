@@ -32,7 +32,9 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bootstrap", "~/Scripts/global.js")
+    @Styles.Render("~/Content/DataTables/css/jquery.dataTables.min.css")
+    @Scripts.Render("~/Content/DataTables/js/jquery.dataTables.min.js")
     @RenderSection("scripts", required: false)
 </body>
 </html>

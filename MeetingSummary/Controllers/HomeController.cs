@@ -12,7 +12,6 @@ namespace MeetingSummary.Controllers
         public readonly Repository _repository = new Repository();
         public ActionResult Index()
         {
-            ViewBag.Users = new SelectList(_repository.GetUsers(), "Id", "Email");
             return View();
         }
 
@@ -27,7 +26,28 @@ namespace MeetingSummary.Controllers
         [HttpPost]
         public ActionResult SaveNewSummary(string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
         {
-            //_repository.SaveSummary(meetingSummary, tasks, assignments, users);
+            _repository.SaveSummary(meetingSummary, tasks, assignments, users);
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult LoadMeetingData(int? id = null)
+        {
+            MeetingData meetingData = null;
+
+            if (id.HasValue)
+            {
+                meetingData = _repository.GetMeetingById(id.Value);
+            }
+            ViewBag.Users = _repository.GetUsers();
+
+            return PartialView("NewSummary", meetingData);
+        }
+
+        [HttpPost]
+        public ActionResult UpdateMeeting(int meetingId, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
+        {
+            _repository.UpdateMeetingData(meetingId, meetingSummary, tasks, assignments, users);
             return Json(true, JsonRequestBehavior.AllowGet);
         }
     }
