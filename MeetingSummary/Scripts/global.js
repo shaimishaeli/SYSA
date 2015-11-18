@@ -50,7 +50,6 @@ function loadSummaryModal(id)
         traditional: true,
         dataType: "html",
         success: function (data) {
-            debugger;
             $('.modal-content').html(data);
         },
         error: function (xhr, ajaxOptions, thrownError) {
