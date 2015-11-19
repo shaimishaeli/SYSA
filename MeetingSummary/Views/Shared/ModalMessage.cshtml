@@ -1,0 +1,16 @@
+﻿<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title">@ViewBag.ModalTitle</h4>
+</div>
+<div class="modal-body" id="newSummaryModal">
+    <fieldset style="width: 100%; direction: rtl;">
+        <div>
+            <p><h2>@ViewBag.ModalMessage</h2></p>
+        </div>
+    </fieldset>
+</div>
+<div class="modal-footer">
+    <button id="saveForm" class="btn btn-default" onclick='@ViewBag.Action'>אישור</button>
+    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearModal()">ביטול</button>
+</div>
+

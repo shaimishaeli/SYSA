@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="DatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="DatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="MeetingAssignments">
           <Key>
             <PropertyRef Name="Id" />
@@ -13,6 +13,7 @@
           <Property Name="AssignedToUserId" Type="int" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
           <Property Name="MeetingId" Type="int" Nullable="false" />
+          <Property Name="IsDone" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="MeetingData">
           <Key>
@@ -22,6 +23,8 @@
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
           <Property Name="UpdateDate" Type="datetime" />
           <Property Name="MeetingSummary" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="MeetingSubject" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="MeetingTasks">
           <Key>
@@ -30,14 +33,14 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="MeetingId" Type="int" Nullable="false" />
           <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsDone" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <Association Name="FK_MeetingAssignments_ToMeetingData">
@@ -94,8 +97,7 @@
             <End Role="MeetingAssignments" EntitySet="MeetingAssignments" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="DatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -108,7 +110,8 @@
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MeetingId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="MeetingData" Relationship="Self.FK_MeetingAssignments_ToMeetingData" FromRole="MeetingAssignments" ToRole="MeetingData" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_MettingAssignments_ToUsers" FromRole="MeetingAssignments" ToRole="Users" />
+          <NavigationProperty Name="Users" Relationship="DatabaseModel.FK_MettingAssignments_ToUsers" FromRole="MeetingAssignments" ToRole="Users" />
+          <Property Name="IsDone" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="MeetingData">
           <Key>
@@ -120,6 +123,8 @@
           <Property Name="MeetingSummary" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="MeetingAssignments" Relationship="Self.FK_MeetingAssignments_ToMeetingData" FromRole="MeetingData" ToRole="MeetingAssignments" />
           <NavigationProperty Name="MeetingTasks" Relationship="Self.FK_MeetingTasks_ToMeetingData" FromRole="MeetingData" ToRole="MeetingTasks" />
+          <Property Name="MeetingSubject" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="MeetingTasks">
           <Key>
@@ -129,16 +134,7 @@
           <Property Name="MeetingId" Type="Int32" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="MeetingData" Relationship="Self.FK_MeetingTasks_ToMeetingData" FromRole="MeetingTasks" ToRole="MeetingData" />
-        </EntityType>
-        <EntityType Name="Users">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="MeetingAssignments" Relationship="Self.FK_MettingAssignments_ToUsers" FromRole="Users" ToRole="MeetingAssignments" />
+          <Property Name="IsDone" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_MeetingAssignments_ToMeetingData">
           <End Role="MeetingData" Type="Self.MeetingData" Multiplicity="1" />
@@ -149,18 +145,6 @@
             </Principal>
             <Dependent Role="MeetingAssignments">
               <PropertyRef Name="MeetingId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_MettingAssignments_ToUsers">
-          <End Role="Users" Type="Self.Users" Multiplicity="1" />
-          <End Role="MeetingAssignments" Type="Self.MeetingAssignments" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Users">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="MeetingAssignments">
-              <PropertyRef Name="AssignedToUserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -180,20 +164,41 @@
           <EntitySet Name="MeetingAssignments" EntityType="Self.MeetingAssignments" />
           <EntitySet Name="MeetingData" EntityType="Self.MeetingData" />
           <EntitySet Name="MeetingTasks" EntityType="Self.MeetingTasks" />
-          <EntitySet Name="Users" EntityType="Self.Users" />
           <AssociationSet Name="FK_MeetingAssignments_ToMeetingData" Association="Self.FK_MeetingAssignments_ToMeetingData">
             <End Role="MeetingData" EntitySet="MeetingData" />
-            <End Role="MeetingAssignments" EntitySet="MeetingAssignments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_MettingAssignments_ToUsers" Association="Self.FK_MettingAssignments_ToUsers">
-            <End Role="Users" EntitySet="Users" />
             <End Role="MeetingAssignments" EntitySet="MeetingAssignments" />
           </AssociationSet>
           <AssociationSet Name="FK_MeetingTasks_ToMeetingData" Association="Self.FK_MeetingTasks_ToMeetingData">
             <End Role="MeetingData" EntitySet="MeetingData" />
             <End Role="MeetingTasks" EntitySet="MeetingTasks" />
           </AssociationSet>
+          <EntitySet Name="Users" EntityType="DatabaseModel.Users" />
+          <AssociationSet Name="FK_MettingAssignments_ToUsers" Association="DatabaseModel.FK_MettingAssignments_ToUsers">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="MeetingAssignments" EntitySet="MeetingAssignments" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MeetingAssignments" Relationship="DatabaseModel.FK_MettingAssignments_ToUsers" FromRole="Users" ToRole="MeetingAssignments" />
+        </EntityType>
+        <Association Name="FK_MettingAssignments_ToUsers">
+          <End Type="DatabaseModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="DatabaseModel.MeetingAssignments" Role="MeetingAssignments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MeetingAssignments">
+              <PropertyRef Name="AssignedToUserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -203,6 +208,7 @@
           <EntitySetMapping Name="MeetingAssignments">
             <EntityTypeMapping TypeName="DatabaseModel.MeetingAssignments">
               <MappingFragment StoreEntitySet="MeetingAssignments">
+                <ScalarProperty Name="IsDone" ColumnName="IsDone" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="AssignedToUserId" ColumnName="AssignedToUserId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -213,6 +219,8 @@
           <EntitySetMapping Name="MeetingData">
             <EntityTypeMapping TypeName="DatabaseModel.MeetingData">
               <MappingFragment StoreEntitySet="MeetingData">
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="MeetingSubject" ColumnName="MeetingSubject" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
                 <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
@@ -223,6 +231,7 @@
           <EntitySetMapping Name="MeetingTasks">
             <EntityTypeMapping TypeName="DatabaseModel.MeetingTasks">
               <MappingFragment StoreEntitySet="MeetingTasks">
+                <ScalarProperty Name="IsDone" ColumnName="IsDone" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="MeetingId" ColumnName="MeetingId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -232,10 +241,9 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="DatabaseModel.Users">
               <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

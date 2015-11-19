@@ -1,0 +1,21 @@
+﻿@using MeetingSummary.Models
+@model IEnumerable<MeetingTasks>
+
+<ul class="list-group-item" id="ulTasks">
+    @if (Model != null)
+    {
+        foreach (var task in Model)
+        {
+            <li>
+                @Html.Partial("Task", task)
+            </li>
+        }
+    }
+    else
+    {
+        <li>
+            @Html.Partial("Task", null)
+        </li>
+    }
+</ul>
+

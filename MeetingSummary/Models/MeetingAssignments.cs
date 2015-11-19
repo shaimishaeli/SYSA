@@ -18,6 +18,7 @@ namespace MeetingSummary.Models
         public int AssignedToUserId { get; set; }
         public string Description { get; set; }
         public int MeetingId { get; set; }
+        public bool IsDone { get; set; }
     
         public virtual MeetingData MeetingData { get; set; }
         public virtual Users Users { get; set; }

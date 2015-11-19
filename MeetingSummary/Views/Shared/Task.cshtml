@@ -1,0 +1,31 @@
+﻿@using MeetingSummary.Models
+@model MeetingTasks
+
+<li>
+    @if (Model != null)
+    {
+        <table width="100%" cellpadding="3" class="tblTasks">
+            <tr>
+                <td>
+                    <input type="text" id="tbTask-@Model.Id" class="tbTasks form-control" @(Model.IsDone ? "check disabled='disabled'" : string.Empty) value="@Model.Description"/>
+                </td>
+                <td style="padding-right: 10px;">                    
+                    <input type="checkbox" class="chkTasks" id="chkTasks-@Model.Id" onchange="complete('Tasks')" @(Model.IsDone ? "checked" : string.Empty)/>
+                </td>
+            </tr>
+        </table>
+    }
+    else
+    {
+        <table width="100%" cellpadding="3">
+            <tr>
+                <td>
+                    @Html.TextBox("Description", null, new { id = "tbTask", @class = "tbTasks form-control" })
+                </td>
+                <td style="padding-right: 10px;"></td>
+            </tr>
+        </table>
+    }
+</li>
+
+

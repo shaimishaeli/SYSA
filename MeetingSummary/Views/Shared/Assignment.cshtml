@@ -1,0 +1,48 @@
+﻿@using MeetingSummary.Models
+@model MeetingAssignments
+
+<li>
+    @if (Model != null)
+    {
+        <table width="100%" cellpadding="3" class="tblAssignments">
+            <tr>
+                <td>                    
+                    <input type="text" id="tbAssignment-@Model.Id" class="tbAssignments form-control" @(Model.IsDone ? "check disabled='disabled'" : string.Empty) value="@Model.Description" />
+                </td>
+                <td style="padding-right: 10px;">
+                    <input type="checkbox" id="chkAssignment-@Model.Id" class="chkAssignments" onchange="complete('Assignments')" @(Model.IsDone ? "checked" : string.Empty) />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @if (Model.IsDone)
+                    {
+                        @Html.DropDownList("Users-" + Model.Id, new SelectList(ViewBag.UsersData, "Id", "Name", Model.AssignedToUserId), new { @class = "ddlUsers form-control short-input", disabled = "disabled" })
+                    }
+                    else
+                    {
+                        @Html.DropDownList("Users-" + Model.Id, new SelectList(ViewBag.UsersData, "Id", "Name", Model.AssignedToUserId), new { @class = "ddlUsers form-control short-input" })
+                    }
+                </td>
+            </tr>
+        </table>   
+    }
+    else
+    {
+        <table width="100%" cellpadding="3" class="tblAssignments">
+            <tr>
+                <td>
+                    @Html.TextBox("Description", null, new { id = "tbAssignment", @class = "tbAssignments form-control" })
+                </td>
+                <td style="padding-right: 10px;">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DropDownList("Users", new SelectList(ViewBag.UsersData, "Id", "Name"), new { @class = "ddlUsers form-control short-input" })
+                </td>
+            </tr>
+        </table>
+    }
+</li>
+

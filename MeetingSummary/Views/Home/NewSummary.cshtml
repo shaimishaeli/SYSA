@@ -9,46 +9,43 @@
         <div>
             @Html.HiddenFor(model => Model.Id)
             <p>
-                <span class="bold under">תאריך:</span> @Html.Raw(DateTime.Now.ToShortDateString())
+                <span class="bold under">תאריך:</span>
+                <input type='text' class="form-control datetimepicker short-input" id='creationDate' />
+                <script type="text/javascript">
+                    $(function () {
+                        $('.datetimepicker').datetimepicker({
+                            defaultDate: @(Model == null ? "moment().valueOf()" : Model.CreationDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds.ToString()),
+                            format: 'DD/MM/YYYY'
+                        });
+                    });
+                </script>
             </p>
+            <p class="bold under">נושא הפגישה</p>
+            <div><p>@Html.TextBoxFor(model => Model.MeetingSubject, new { @class = "form-control" })</p></div>
             <p class="bold under">סיכום הפגישה</p>
-            <p>@Html.TextAreaFor(model => Model.MeetingSummary, new { cols = "50", rows = "10" })</p>
-            <p class="bold under">משימות לפגישה הבאה</p>
-            <p>
-                <div id="divTasks">
-                    <ul class="list-group-item" id="ulTasks">
-                        @if (Model != null)
-                        {
-                            foreach (var task in Model.MeetingTasks)
-                            {
-                                <li>@Html.TextBoxFor(model => task.Description, null, new { @class = "tbTasks" })</li>
-                            }
-                        }
-                    </ul>
-                </div>
-                <button type="button" class="btn btn-default" onclick="addNewDataRow('Tasks', '');">הוסף משימה</button>
-            </p>
-            <p class="bold under">מטלות</p>
-            <p>
-                <div id="divAssignments">
-                    <ul class="list-group-item" id="ulAssignments">
-                        @if (Model != null)
-                        {
-                            foreach (var assignment in Model.MeetingAssignments)
-                            {
-                                <li>
-                                    @Html.TextBoxFor(model => assignment.Description, null, new { @class = "tbAssignments" })
-                                    @Html.DropDownListFor(model => assignment.Users, new SelectList(ViewBag.Users, "Id", "Email", assignment.AssignedToUserId), new { @class = "ddlUsers" })
-                                </li>
-                            }
-                        }
-                    </ul>
-                </div>
-                @{
-                    var usersDDL = Html.DropDownList("users", new SelectList(ViewBag.Users, "Id", "Email"), new { @class = "ddlUsers" }).ToString().Replace(Environment.NewLine, "");
-                }
-                <button type="button" class="btn btn-default" onclick="addNewDataRow('Assignments', '@usersDDL');">הוסף מטלה</button>
-            </p>
+            <p>@Html.TextAreaFor(model => Model.MeetingSummary, new { @class = "form-control", cols = "50", rows = "10" })</p>
+            <fieldset style="width: 100%;">
+                <p class="bold under">משימות לפגישה הבאה</p>
+                <p>
+                    <div id="divTasks">
+                        @Html.Partial("Tasks", Model != null ? Model.MeetingTasks : null)
+                    </div>
+                    <div style="padding-top: 5px;">
+                        <button type="button" class="btn btn-default add-btn" aria-label="Left Align" onclick="addNewDataRow('Tasks');">הוסף משימה<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
+                    </div>
+                </p>
+            </fieldset>
+            <fieldset style="width: 100%;">
+                <p class="bold under">מטלות שיש לבצע עד לפגישה הבאה</p>
+                <p>
+                    <div id="divAssignments">
+                        @Html.Partial("Assignments", Model != null ? Model.MeetingAssignments : null)
+                    </div>
+                    <div style="padding-top: 5px;">
+                        <button type="button" class="btn btn-default add-btn" aria-label="Left Align" onclick="addNewDataRow('Assignments');">הוסף מטלה<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
+                    </div>
+                </p>
+            </fieldset>
         </div>
     </fieldset>
 </div>

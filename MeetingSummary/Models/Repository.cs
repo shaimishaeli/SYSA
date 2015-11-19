@@ -11,7 +11,7 @@ namespace MeetingSummary.Models
 
         private IEnumerable<MeetingData> GetMeetingsData()
         {
-            return _db.MeetingData.OrderBy(x => x.CreationDate);
+            return _db.MeetingData.Where(x => !x.IsArchived).OrderBy(x => x.CreationDate);
         }
 
         public IEnumerable<MeetingDataViewModel> PopulateMeetingReportViewModel()
@@ -27,26 +27,33 @@ namespace MeetingSummary.Models
             return _db.Users;
         }
 
-        public void SaveSummary(string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
+        public void SaveSummary(DateTime creationDate, string meetingSubject, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
         {
             var meetingData = new MeetingData();
+            meetingData.MeetingSubject = meetingSubject;
             meetingData.MeetingSummary = meetingSummary;
-            meetingData.CreationDate = DateTime.Now;
+            meetingData.CreationDate = creationDate;
             _db.MeetingData.Add(meetingData);
             _db.SaveChanges();
 
-            UpdateData(meetingData.Id, tasks, assignments, users);
+            UpdateData(meetingData.Id, tasks, assignments, users, null, null);
         }
 
-        public void UpdateData(int meetingId, List<string> tasks, List<string> assignments, List<int> users)
+        public void UpdateData(int meetingId, List<string> tasks, List<string> assignments, List<int> users, List<bool> tasksChk, List<bool> assignmentsChk)
         {
             if(tasks != null)
             {
-                foreach (var task in tasks)
+                for (int i = 0; i < tasks.Count; i++)
                 {
                     var taskObj = new MeetingTasks();
-                    taskObj.Description = task;
+                    taskObj.Description = tasks[i];
                     taskObj.MeetingId = meetingId;
+
+                    if (tasksChk != null)
+                    {
+                        taskObj.IsDone = tasksChk[i];
+                    }
+
                     _db.MeetingTasks.Add(taskObj);
                 }
             }
@@ -59,11 +66,24 @@ namespace MeetingSummary.Models
                     assignmentObj.Description = assignments[i];
                     assignmentObj.AssignedToUserId = users[i];
                     assignmentObj.MeetingId = meetingId;
+
+                    if(assignmentsChk != null)
+                    {
+                        assignmentObj.IsDone = assignmentsChk[i];
+                    }
+
                     _db.MeetingAssignments.Add(assignmentObj);
+
+                    //MailSender.SendMail(GetUserById(assignmentObj.AssignedToUserId), "קיבלת משימה חדשה", assignmentObj.Description);
                 }
             }
 
             _db.SaveChanges();
+        }
+
+        public Users GetUserById(int userId)
+        {
+            return _db.Users.Find(userId);
         }
 
         public MeetingData GetMeetingById(int id)
@@ -71,11 +91,13 @@ namespace MeetingSummary.Models
             return _db.MeetingData.Find(id);
         }
 
-        public void UpdateMeetingData(int meetingId, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
+        public void UpdateMeetingData(DateTime creationDate, string meetingSubject, int meetingId, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users, List<bool> tasksChk, List<bool> assignmentsChk)
         {
             var meetingData = GetMeetingById(meetingId);
             meetingData.UpdateDate = DateTime.Now;
             meetingData.MeetingSummary = meetingSummary;
+            meetingData.CreationDate = creationDate;
+            meetingData.MeetingSubject = meetingSubject;
 
             var tasksList = meetingData.MeetingTasks.ToList();
             foreach (var task in tasksList)
@@ -91,7 +113,16 @@ namespace MeetingSummary.Models
 
             _db.SaveChanges();
 
-            UpdateData(meetingId, tasks, assignments, users);
+            UpdateData(meetingId, tasks, assignments, users, tasksChk, assignmentsChk);
+        }
+
+        public void DeleteMeetingData(int meetingId)
+        {
+            var meetingData = GetMeetingById(meetingId);
+            meetingData.UpdateDate = DateTime.Now;
+            meetingData.IsArchived = true;
+
+            _db.SaveChanges();
         }
     }
 }

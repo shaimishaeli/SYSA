@@ -8,10 +8,10 @@
         <EntityTypeShape EntityType="DatabaseModel.MeetingAssignments" Width="1.5" PointX="3" PointY="3.625" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.MeetingData" Width="1.5" PointX="0.75" PointY="3.625" IsExpanded="true" />
         <EntityTypeShape EntityType="DatabaseModel.MeetingTasks" Width="1.5" PointX="3" PointY="6.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="DatabaseModel.Users" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="DatabaseModel.FK_MeetingAssignments_ToMeetingData" ManuallyRouted="false" />
-        <AssociationConnector Association="DatabaseModel.FK_MettingAssignments_ToUsers" ManuallyRouted="false" />
         <AssociationConnector Association="DatabaseModel.FK_MeetingTasks_ToMeetingData" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="DatabaseModel.Users" Width="1.5" PointX="0.75" PointY="0.875" />
+        <AssociationConnector Association="DatabaseModel.FK_MettingAssignments_ToUsers" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

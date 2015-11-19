@@ -24,9 +24,9 @@ namespace MeetingSummary.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveNewSummary(string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
+        public ActionResult SaveNewSummary(DateTime creationDate, string meetingSubject, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
         {
-            _repository.SaveSummary(meetingSummary, tasks, assignments, users);
+            _repository.SaveSummary(creationDate, meetingSubject, meetingSummary, tasks, assignments, users);
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
@@ -39,16 +39,39 @@ namespace MeetingSummary.Controllers
             {
                 meetingData = _repository.GetMeetingById(id.Value);
             }
-            ViewBag.Users = _repository.GetUsers();
+            ViewBag.UsersData = _repository.GetUsers();
 
             return PartialView("NewSummary", meetingData);
         }
 
         [HttpPost]
-        public ActionResult UpdateMeeting(int meetingId, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
+        public ActionResult UpdateMeeting(DateTime creationDate, string meetingSubject, int meetingId, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users, List<bool> tasksChk, List<bool> assignmentsChk)
         {
-            _repository.UpdateMeetingData(meetingId, meetingSummary, tasks, assignments, users);
+            _repository.UpdateMeetingData(creationDate, meetingSubject, meetingId, meetingSummary, tasks, assignments, users, tasksChk, assignmentsChk);
             return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteMeetingData(int meetingId)
+        {
+            _repository.DeleteMeetingData(meetingId);
+            return Json(true, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult LoadModalMessage(string modalTitle, string modalMessage, string action)
+        {
+            ViewBag.ModalTitle = modalTitle;
+            ViewBag.ModalMessage = modalMessage;
+            ViewBag.Action = action;
+            return PartialView("ModalMessage");
+        }
+
+        [HttpPost]
+        public ActionResult AddComponent(string type)
+        {
+            ViewBag.UsersData = _repository.GetUsers();
+            return PartialView(type);
         }
     }
 }

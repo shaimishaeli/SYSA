@@ -25,6 +25,8 @@ namespace MeetingSummary.Models
         public System.DateTime CreationDate { get; set; }
         public Nullable<System.DateTime> UpdateDate { get; set; }
         public string MeetingSummary { get; set; }
+        public string MeetingSubject { get; set; }
+        public bool IsArchived { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<MeetingAssignments> MeetingAssignments { get; set; }

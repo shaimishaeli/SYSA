@@ -16,14 +16,17 @@
         ],
         "columns": [
                     {
+                        "width": "100px",
                         "orderable": false,
                         "data": null,
                         "render": function (date, type, full, meta) {
-                            return '<button type="button" class="btn btn-default" aria-label="Left Align" data-toggle="modal" data-target="#addSummary" onclick="loadSummaryModal(' + full.Id + ')"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>';
+                            return '<button type="button" class="btn btn-default" style="float: right;" aria-label="Left Align" data-toggle="modal" data-target="#addSummary" onclick="loadSummaryModal(' + full.Id + ')"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></button>' + 
+                                   '<button type="button" class="btn btn-default" style="float: left;" aria-label="Left Align" data-toggle="modal" data-target="#addSummary" onclick="showConfirmDelete(' + full.Id + ')"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>';
                         }
                     },
                     { "data": "CreationDate" },
-                    { "data": "Summary" }
+                    { "data": "Subject" },
+                    { "data": "UpdateDate" }
         ]
     });
 });
@@ -51,9 +54,43 @@ function loadSummaryModal(id)
         dataType: "html",
         success: function (data) {
             $('.modal-content').html(data);
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-            $(".modalSpinner").hide();
+        }
+    });
+}
+
+function showConfirmDelete(id)
+{
+    var dataToSend = {
+        modalTitle: "מחיקת סיכום פגישה",
+        modalMessage: "האם אתה בטוח שברצונך למחוק את סיכום הפגישה?",
+        action: "deleteRow(" + id + ")"
+
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "/Home/LoadModalMessage",
+        data: dataToSend,
+        traditional: true,
+        dataType: "html",
+        success: function (data) {
+            $('.modal-content').html(data);
+        }
+    });
+}
+
+function deleteRow(id)
+{
+    var dataToSend = { meetingId: id };
+
+    $.ajax({
+        type: "POST",
+        url: "/Home/DeleteMeetingData",
+        data: dataToSend,
+        traditional: true,
+        success: function (data) {
+            $('#addSummary').modal('toggle');
+            refreshSummaryDataTable();
         }
     });
 }
@@ -63,10 +100,14 @@ function saveSummary(isEdit)
     var url = isEdit ? "/Home/UpdateMeeting" : "/Home/SaveNewSummary"
     var dataToSend = {
         meetingId: $("#Id").val(),
+        creationDate: $("#creationDate").val(),
+        meetingSubject: $("#MeetingSubject").val(),
         meetingSummary: $("#MeetingSummary").val(),
-        tasks: $(".tbTasks").map(function(){return $(this).val();}).get(),
+        tasks: $(".tbTasks").map(function () { return $(this).val(); }).get(),
         assignments: $(".tbAssignments").map(function () { return $(this).val(); }).get(),
-        users: $(".ddlUsers").map(function () { return $(this).val(); }).get()
+        users: $(".ddlUsers").map(function () { return $(this).val(); }).get(),
+        tasksChk: $(".chkTasks").map(function () { return $(this).prop("checked"); }).get(),
+        assignmentsChk: $(".chkAssignments").map(function () { return $(this).prop("checked"); }).get()
     };
 
     $.ajax({
@@ -89,7 +130,29 @@ function saveSummary(isEdit)
     });
 }
 
-function addNewDataRow(type, htmlString) {
-    var ul = $("#ul" + type);
-    ul.append("<li><input type='textbox' class='tb" + type + "'/> &nbsp;" + htmlString + "</li>");
+function addNewDataRow(type) {
+    var dataToSend = { type: type };
+
+    $.ajax({
+        type: "POST",
+        url: "/Home/AddComponent",
+        data: dataToSend,
+        traditional: true,
+        dataType: "html",
+        success: function (data) {
+            $('#div' + type).append(data);
+        },
+        beforeSend: function () {
+            $(".modalSpinner").show();
+        },
+        complete: function () {
+            $(".modalSpinner").hide();
+        }
+    });
+}
+
+function complete(type)
+{
+    var element = $(event.target);
+    element.parents('.tbl' + type).find('.tb' + type + ', .ddlUsers').prop("disabled", element.prop("checked"));
 }

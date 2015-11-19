@@ -17,10 +17,8 @@
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
+.short-input {
+    max-width: 150px;
 }
 
 .noDisplay
@@ -54,18 +52,25 @@ textarea {
     color: white;
 }
 
-li {
-    display: block;
-}
-
-li:before {
-    /*Using a Bootstrap glyphicon as the bullet point*/
-    content: "\e128";
-    font-family: 'Glyphicons Halflings';
-    margin: auto;
-}
-
 li
 {
-    padding: 0 0 4px 4px;
+    display: block;
+    margin-right: 10px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+}
+
+.form-control
+{
+    display: inline;
+}
+
+.completed
+{
+    text-decoration: underline;
+}
+
+.add-btn > .glyphicon
+{
+    padding-right: 10px;
 }

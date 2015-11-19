@@ -7,6 +7,6 @@ namespace MeetingSummary.Models
 {
     public static class Const
     {
-        public readonly static string[] REPORT_HEADERS= { "תאריך הפגישה", "תקציר סיכום הפגישה" };
+        public readonly static string[] REPORT_HEADERS= { "תאריך הפגישה", "נושא הפגישה", "תאריך עדכון" };
     }
 }
