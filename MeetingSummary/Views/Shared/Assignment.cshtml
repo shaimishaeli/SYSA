@@ -4,13 +4,13 @@
 <li>
     @if (Model != null)
     {
-        <table width="100%" cellpadding="3" class="tblAssignments">
+        <table width="100%" cellpadding="3" class="tblAssignments" style="table-layout:fixed;">
             <tr>
-                <td>                    
+                <td width="90%">                    
                     <input type="text" id="tbAssignment-@Model.Id" class="tbAssignments form-control" @(Model.IsDone ? "check disabled='disabled'" : string.Empty) value="@Model.Description" />
                 </td>
-                <td style="padding-right: 10px;">
-                    <input type="checkbox" id="chkAssignment-@Model.Id" class="chkAssignments" onchange="complete('Assignments')" @(Model.IsDone ? "checked" : string.Empty) />
+                <td>
+                    <input type="checkbox" id="chkAssignment-@Model.Id" class="chkAssignments form-control" onchange="complete('Assignments')" @(Model.IsDone ? "checked" : string.Empty) />
                 </td>
             </tr>
             <tr>
@@ -29,12 +29,13 @@
     }
     else
     {
-        <table width="100%" cellpadding="3" class="tblAssignments">
+        <table width="100%" cellpadding="3" class="tblAssignments" style="table-layout:fixed;">
             <tr>
-                <td>
+                <td width="90%">
                     @Html.TextBox("Description", null, new { id = "tbAssignment", @class = "tbAssignments form-control" })
                 </td>
-                <td style="padding-right: 10px;">
+                <td>
+                    <input type="checkbox" id="chkAssignment" class="chkAssignments form-control" onchange="complete('Assignments')" />
                 </td>
             </tr>
             <tr>

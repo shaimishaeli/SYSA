@@ -4,13 +4,13 @@
 <li>
     @if (Model != null)
     {
-        <table width="100%" cellpadding="3" class="tblTasks">
+        <table width="100%" cellpadding="3" class="tblTasks" style="table-layout: fixed;">
             <tr>
-                <td>
+                <td width="90%">
                     <input type="text" id="tbTask-@Model.Id" class="tbTasks form-control" @(Model.IsDone ? "check disabled='disabled'" : string.Empty) value="@Model.Description"/>
                 </td>
-                <td style="padding-right: 10px;">                    
-                    <input type="checkbox" class="chkTasks" id="chkTasks-@Model.Id" onchange="complete('Tasks')" @(Model.IsDone ? "checked" : string.Empty)/>
+                <td>                    
+                    <input type="checkbox" class="chkTasks form-control" id="chkTasks-@Model.Id" onchange="complete('Tasks')" @(Model.IsDone ? "checked" : string.Empty)/>
                 </td>
             </tr>
         </table>
@@ -19,10 +19,12 @@
     {
         <table width="100%" cellpadding="3">
             <tr>
-                <td>
+                <td width="90%">
                     @Html.TextBox("Description", null, new { id = "tbTask", @class = "tbTasks form-control" })
                 </td>
-                <td style="padding-right: 10px;"></td>
+                <td>
+                    <input type="checkbox" class="chkTasks form-control" id="chkTasks" onchange="complete('Tasks')" />
+                </td>
             </tr>
         </table>
     }
