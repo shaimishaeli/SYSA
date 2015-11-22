@@ -24,7 +24,7 @@ namespace MeetingSummary.Controllers
         }
 
         [HttpPost]
-        public ActionResult SaveNewSummary(DateTime creationDate, string meetingSubject, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
+        public ActionResult SaveNewSummary(string creationDate, string meetingSubject, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
         {
             _repository.SaveSummary(creationDate, meetingSubject, meetingSummary, tasks, assignments, users);
             return Json(true, JsonRequestBehavior.AllowGet);
@@ -45,18 +45,9 @@ namespace MeetingSummary.Controllers
         }
 
         [HttpPost]
-        public ActionResult UpdateMeeting(DateTime creationDate, string meetingSubject, int meetingId, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users, List<bool> tasksChk, List<bool> assignmentsChk)
+        public ActionResult UpdateMeeting(string creationDate, string meetingSubject, int meetingId, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users, List<bool> tasksChk, List<bool> assignmentsChk)
         {
-            try
-            {
-                _repository.UpdateMeetingData(creationDate, meetingSubject, meetingId, meetingSummary, tasks, assignments, users, tasksChk, assignmentsChk);
-            }
-            catch (Exception ex)
-            {
-                ViewBag.ErrorMessage = ex.Message;
-                ViewBag.StackTrace = ex.StackTrace;
-                return PartialView("Error");
-            }
+            _repository.UpdateMeetingData(creationDate, meetingSubject, meetingId, meetingSummary, tasks, assignments, users, tasksChk, assignmentsChk);
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 

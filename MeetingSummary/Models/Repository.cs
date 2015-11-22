@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -27,12 +28,12 @@ namespace MeetingSummary.Models
             return _db.Users;
         }
 
-        public void SaveSummary(DateTime creationDate, string meetingSubject, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
+        public void SaveSummary(string creationDate, string meetingSubject, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users)
         {
             var meetingData = new MeetingData();
             meetingData.MeetingSubject = meetingSubject;
             meetingData.MeetingSummary = meetingSummary;
-            meetingData.CreationDate = creationDate;
+            meetingData.CreationDate = DateTime.ParseExact(creationDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             _db.MeetingData.Add(meetingData);
             _db.SaveChanges();
 
@@ -91,12 +92,12 @@ namespace MeetingSummary.Models
             return _db.MeetingData.Find(id);
         }
 
-        public void UpdateMeetingData(DateTime creationDate, string meetingSubject, int meetingId, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users, List<bool> tasksChk, List<bool> assignmentsChk)
+        public void UpdateMeetingData(string creationDate, string meetingSubject, int meetingId, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users, List<bool> tasksChk, List<bool> assignmentsChk)
         {
             var meetingData = GetMeetingById(meetingId);
             meetingData.UpdateDate = DateTime.Now;
             meetingData.MeetingSummary = meetingSummary;
-            meetingData.CreationDate = creationDate;
+            meetingData.CreationDate = DateTime.ParseExact(creationDate, "dd/MM/yyyy", CultureInfo.InvariantCulture); ;
             meetingData.MeetingSubject = meetingSubject;
 
             var tasksList = meetingData.MeetingTasks.ToList();
