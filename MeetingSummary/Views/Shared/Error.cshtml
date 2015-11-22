@@ -8,6 +8,11 @@
     <hgroup>
         <h1>Error.</h1>
         <h2>An error occurred while processing your request.</h2>
-    </hgroup>
+        @if (ViewBag.ErrorErrorMessage != null)
+        {
+            <h3>@ViewBag.ErrorMessage</h3>
+            <h3>@ViewBag.StackTrace</h3>
+        }
+</hgroup>
 </body>
 </html>

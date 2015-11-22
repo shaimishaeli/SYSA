@@ -47,7 +47,16 @@ namespace MeetingSummary.Controllers
         [HttpPost]
         public ActionResult UpdateMeeting(DateTime creationDate, string meetingSubject, int meetingId, string meetingSummary, List<string> tasks, List<string> assignments, List<int> users, List<bool> tasksChk, List<bool> assignmentsChk)
         {
-            _repository.UpdateMeetingData(creationDate, meetingSubject, meetingId, meetingSummary, tasks, assignments, users, tasksChk, assignmentsChk);
+            try
+            {
+                _repository.UpdateMeetingData(creationDate, meetingSubject, meetingId, meetingSummary, tasks, assignments, users, tasksChk, assignmentsChk);
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                ViewBag.StackTrace = ex.StackTrace;
+                return PartialView("Error");
+            }
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
