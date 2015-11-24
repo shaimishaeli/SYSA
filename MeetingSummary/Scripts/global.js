@@ -182,7 +182,18 @@ function updateDataToImport()
         traditional: true,
         dataType: "html",
         success: function (data) {
-            $('#importModalBody').append(data);
+            if (data != null && data != '') {
+                var span = document.createElement("span");
+                var textToDisplay = "תוצאות לתאריך - " + $('#importMeeting').val();
+                var text = document.createTextNode(textToDisplay);
+
+                span.className = "bold under"
+
+                span.appendChild(text);
+
+                $('#importModalBody').append(span);
+                $('#importModalBody').append(data);
+            }
         },
         beforeSend: function () {
             $(".modalSpinner").show();

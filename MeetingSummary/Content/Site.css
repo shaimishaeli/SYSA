@@ -74,3 +74,10 @@ li
 {
     padding-right: 10px;
 }
+
+#addSummary .modal-body
+{
+    height: 60vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
