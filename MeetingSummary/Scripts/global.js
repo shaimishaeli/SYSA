@@ -80,7 +80,7 @@ function showConfirmDelete(id)
         traditional: true,
         dataType: "html",
         success: function (data) {
-            $('.addSummaryContent').html(data);
+            $('#addSummaryContent').html(data);
         }
     });
 }
