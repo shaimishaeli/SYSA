@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Web;
@@ -10,7 +11,7 @@ namespace MeetingSummary.Models
     {
         public readonly MeetingEntities _db = new MeetingEntities();
 
-        private IEnumerable<MeetingData> GetMeetingsData()
+        public IEnumerable<MeetingData> GetMeetingsData()
         {
             return _db.MeetingData.Where(x => !x.IsArchived).OrderBy(x => x.CreationDate);
         }
@@ -97,7 +98,7 @@ namespace MeetingSummary.Models
             var meetingData = GetMeetingById(meetingId);
             meetingData.UpdateDate = DateTime.Now;
             meetingData.MeetingSummary = meetingSummary;
-            meetingData.CreationDate = DateTime.ParseExact(creationDate, "dd/MM/yyyy", CultureInfo.InvariantCulture); ;
+            meetingData.CreationDate = DateTime.ParseExact(creationDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             meetingData.MeetingSubject = meetingSubject;
 
             var tasksList = meetingData.MeetingTasks.ToList();
@@ -124,6 +125,12 @@ namespace MeetingSummary.Models
             meetingData.IsArchived = true;
 
             _db.SaveChanges();
+        }
+
+        public MeetingData GetMeetingByDate(string date)
+        {
+            var fromDate = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            return _db.MeetingData.FirstOrDefault(x => DbFunctions.TruncateTime(x.CreationDate) == DbFunctions.TruncateTime(fromDate));
         }
     }
 }

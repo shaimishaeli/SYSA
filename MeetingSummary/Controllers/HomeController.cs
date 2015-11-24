@@ -12,6 +12,8 @@ namespace MeetingSummary.Controllers
         public readonly Repository _repository = new Repository();
         public ActionResult Index()
         {
+            var meetings = _repository.GetMeetingsData().Select(x => x.CreationDate.ToShortDateString());
+            ViewBag.Meetings = new SelectList(meetings);
             return View();
         }
 
@@ -72,6 +74,25 @@ namespace MeetingSummary.Controllers
         {
             ViewBag.UsersData = _repository.GetUsers();
             return PartialView(type);
+        }
+
+        [HttpPost]
+        public ActionResult GetDataToImport(string type, string fromDate)
+        {
+            var meeting = _repository.GetMeetingByDate(fromDate);
+            if (meeting != null)
+            {
+                switch (type)
+                {
+                    case "Assignments":
+                        ViewBag.UsersData = _repository.GetUsers();
+                        return PartialView(type, meeting.MeetingAssignments.Where(x => !x.IsDone));
+                    case "Tasks":
+                        return PartialView(type, meeting.MeetingTasks.Where(x => !x.IsDone));
+                }
+            }
+
+            return PartialView("Error");
         }
     }
 }

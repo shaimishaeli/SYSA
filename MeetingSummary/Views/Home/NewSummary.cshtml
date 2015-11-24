@@ -13,7 +13,7 @@
                 <input type='text' class="form-control datetimepicker short-input" id='creationDate' />
                 <script type="text/javascript">
                     $(function () {
-                        $('.datetimepicker').datetimepicker({
+                        $('#creationDate').datetimepicker({
                             defaultDate: @(Model == null ? "moment().valueOf()" : Model.CreationDate.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds.ToString()),
                             format: 'DD/MM/YYYY'
                         });
@@ -32,6 +32,7 @@
                     </div>
                     <div style="padding-top: 5px;">
                         <button type="button" class="btn btn-default add-btn" aria-label="Left Align" onclick="addNewDataRow('Tasks');">הוסף משימה<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#importModal" aria-label="Left Align" onclick="updateImportModal('Tasks');">ייבא משימה<span class="glyphicon glyphicon-import" aria-hidden="true"></span></button>
                     </div>
                 </p>
             </fieldset>
@@ -43,6 +44,7 @@
                     </div>
                     <div style="padding-top: 5px;">
                         <button type="button" class="btn btn-default add-btn" aria-label="Left Align" onclick="addNewDataRow('Assignments');">הוסף מטלה<span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span></button>
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#importModal" aria-label="Left Align" onclick="updateImportModal('Assignments');">ייבא מטלה<span class="glyphicon glyphicon-import" aria-hidden="true"></span></button>
                     </div>
                 </p>
             </fieldset>

@@ -53,7 +53,13 @@ function loadSummaryModal(id)
         traditional: true,
         dataType: "html",
         success: function (data) {
-            $('.modal-content').html(data);
+            $('#addSummaryContent').html(data);
+        },
+        beforeSend: function () {
+            $(".modalSpinner").show();
+        },
+        complete: function () {
+            $(".modalSpinner").hide();
         }
     });
 }
@@ -74,7 +80,7 @@ function showConfirmDelete(id)
         traditional: true,
         dataType: "html",
         success: function (data) {
-            $('.modal-content').html(data);
+            $('.addSummaryContent').html(data);
         }
     });
 }
@@ -155,4 +161,52 @@ function complete(type)
 {
     var element = $(event.target);
     element.parents('.tbl' + type).find('.tb' + type + ', .ddlUsers').prop("disabled", element.prop("checked"));
+}
+
+function updateImportModal(type)
+{
+    $("#hImportType").val(type);
+}
+
+function updateDataToImport()
+{
+    var dataToSend = {
+        type: $("#hImportType").val(),
+        fromDate: $('#importMeeting').val()
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "/Home/GetDataToImport",
+        data: dataToSend,
+        traditional: true,
+        dataType: "html",
+        success: function (data) {
+            $('#importModalBody').append(data);
+        },
+        beforeSend: function () {
+            $(".modalSpinner").show();
+        },
+        complete: function () {
+            $(".modalSpinner").hide();
+        }
+    });
+}
+
+function clearImportModal()
+{
+    $("#importModal").find('input').val('');
+    $('#importModalBody').html('');
+    $('#importModalBody').text('');
+}
+
+function saveImport()
+{
+    $('#importModal').modal('toggle');
+    var type = $("#hImportType").val();
+    var checkbox = $("#importModalBody").find("input[type='checkbox']:checked");
+    var component = checkbox.closest("li");
+    checkbox.click();
+    $("#ul" + type).append(component);
+    clearImportModal();
 }
