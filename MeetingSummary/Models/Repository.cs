@@ -130,7 +130,7 @@ namespace MeetingSummary.Models
         public MeetingData GetMeetingByDate(string date)
         {
             var fromDate = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            return _db.MeetingData.FirstOrDefault(x => DbFunctions.TruncateTime(x.CreationDate) == DbFunctions.TruncateTime(fromDate));
+            return _db.MeetingData.Where(x => !x.IsArchived).FirstOrDefault(x => DbFunctions.TruncateTime(x.CreationDate) == DbFunctions.TruncateTime(fromDate));
         }
     }
 }

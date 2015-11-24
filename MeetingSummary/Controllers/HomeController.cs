@@ -1,6 +1,7 @@
 ﻿using MeetingSummary.Models;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,7 +13,7 @@ namespace MeetingSummary.Controllers
         public readonly Repository _repository = new Repository();
         public ActionResult Index()
         {
-            var meetings = _repository.GetMeetingsData().Select(x => x.CreationDate.ToShortDateString());
+            var meetings = _repository.GetMeetingsData().Select(x => x.CreationDate.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture));
             ViewBag.Meetings = new SelectList(meetings);
             return View();
         }
